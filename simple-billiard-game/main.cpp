@@ -21,6 +21,12 @@
 
 #define define M_PI  3.14159265358979323846 
 
+struct Circle
+{
+	int x, y;
+	int r;
+};
+
 auto errthrow = [](const std::string &e) {
 	std::string errstr = e + " : " + SDL_GetError();
 	SDL_Quit();
@@ -107,7 +113,7 @@ class billiard_table_t {
 		vec_t size;
 
 
-		void draw (std::shared_ptr<SDL_Renderer> renderer) {
+		void draw (std::shared_ptr<SDL_Renderer> renderer, const std::vector<int> collisions = {}) {
 
 			auto billiard_table = load_texture(renderer, "data/billiard_table.bmp");
 
@@ -122,12 +128,47 @@ class billiard_table_t {
 		}
 };
 
+
+class stick_t {
+public:
+
+	vec_t position;
+	vec_t size;
+	double angle;
+	double angleRad;
+	double strengh;
+
+	void draw(std::shared_ptr<SDL_Renderer> renderer) {
+
+		auto billiard_table = load_texture(renderer, "data/stick.bmp");
+
+		SDL_Rect Dstrect;
+
+		Dstrect.x = position[0];
+		Dstrect.y = position[1];
+		Dstrect.w = size[0];
+		Dstrect.h = size[1];
+		SDL_Point point = { 0, 0 };
+
+		SDL_RenderCopyEx(renderer.get(), billiard_table.get(), NULL, &Dstrect, angle, &point, SDL_FLIP_NONE);
+	}
+
+
+};
+
+double distanceSquared(int x1, int y1, int x2, int y2)
+{
+	int deltaX = x2 - x1;
+	int deltaY = y2 - y1;
+	return deltaX * deltaX + deltaY * deltaY;
+}
+
 class ball_t {
 	public:
 
 		vec_t position;
 		vec_t size;
-		double velocity;
+		vec_t velocity;
 
 		void draw(std::shared_ptr<SDL_Renderer> renderer, std::string path) {
 
@@ -144,32 +185,76 @@ class ball_t {
 
 			
 		}
-};
 
-class stick_t {
-	public:
+		Circle mCollider;
 
-		vec_t position;
-		vec_t size;
-		double angle;
-		double angleRad;
-		double strengh;
-
-		void draw(std::shared_ptr<SDL_Renderer> renderer) {
-
-			auto billiard_table = load_texture(renderer, "data/stick.bmp");
-
-			SDL_Rect Dstrect;
-
-			Dstrect.x = position[0];
-			Dstrect.y = position[1];
-			Dstrect.w = size[0];
-			Dstrect.h = size[1];
-			SDL_Point point = { 0, 0 };
-
-			SDL_RenderCopyEx(renderer.get(), billiard_table.get(), NULL, &Dstrect, angle, &point, SDL_FLIP_NONE);
+		ball_t() {
+			mCollider.r = size[0] / 2 - 1;
+			mCollider.x = position[0];
+			mCollider.y = position[1];
 		}
 
+		bool checkCollision(Circle& a, Circle& b) {
+			int totalRadiusSquared = a.r + b.r;
+			totalRadiusSquared = totalRadiusSquared * totalRadiusSquared;
+
+			if (distanceSquared(a.x, a.y, b.x, b.y) < (totalRadiusSquared))
+			{
+				return true;
+			}
+			else 
+			{
+				return false;
+			}
+		}
+
+		bool checkCollision(Circle& a, SDL_Rect& b) {
+			int cX, cY;
+
+			if (a.x < b.x)
+			{
+				cX = b.x;
+			}
+			else if (a.x > b.x + b.w)
+			{
+				cX = b.x + b.w;
+			}
+			else
+			{
+				cX = a.x;
+			}
+
+			if (a.y < b.y)
+			{
+				cY = b.y;
+			}
+			else if (a.y > b.y + b.h)
+			{
+				cY = b.y + b.h;
+			}
+			else
+			{
+				cY = a.y;
+			}
+
+			if (distanceSquared(a.x, a.y, cX, cY) < a.r * a.r)
+			{
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		bool checkCollision(Circle& a, SDL_Point& b) {
+
+		}
+
+		/*void move(vec_t direction, stick_t stick) {
+			velocity = { stick.strengh / 5, stick.strengh / 5 };
+			position = position - velocity;
+			velocity = velocity - vec_t{ 0.9, 0.9 };
+		}*/
 
 };
 
@@ -229,15 +314,22 @@ int main() { // int argc, char **argv ) {
 	//balls
 	white_ball.position = { 744, 279 };
 	white_ball.size = { 32, 32 };
-	white_ball.velocity = 0;
+	white_ball.velocity = { 0,0 };
 
 	ball_one.position = { 200, 279 };
 	ball_one.size = { 32, 32 };
-	ball_one.velocity = 0;
+	ball_one.velocity = { 0,0 };
 
 	stick.position = { white_ball.position[0],
 	white_ball.position[1]};
 	stick.strengh = 0;
+
+	SDL_Rect billiard_rect1 = { 86,0,398,52 };
+	SDL_Rect billiard_rect2 = { 538,0,398,52 };
+	SDL_Rect billiard_rect3 = { 0,86,52,394 };
+	SDL_Rect billiard_rect4 = { 972,86,1024,394 };
+	SDL_Rect billiard_rect5 = { 86,519,398,52 };
+	SDL_Rect billiard_rect6 = { 538,519,398,52 };
 
 	gameStateEnum gameState = aimBall;
 
@@ -288,12 +380,26 @@ int main() { // int argc, char **argv ) {
 				}
 				break;
 			case ballInMove:
-				SDL_Log("ballInMove");
-				if (white_ball.velocity == 0 && ball_one.velocity == 0) {
+				//SDL_Log("ballInMove");
+				/*if (white_ball.velocity[0] == 0 && white_ball.velocity[1] == 0 && 
+					ball_one.velocity[0] == 0 && ball_one.velocity[2] == 0) {*/
 					//SAVE POINTS TODO
 					//gameState = aimBall;
 					//stick.strengh = 0;
+				//}
+
+				bool collided = white_ball.checkCollision(white_ball.mCollider, billiard_rect1);
+				collided = white_ball.checkCollision(white_ball.mCollider, billiard_rect2);
+				collided = white_ball.checkCollision(white_ball.mCollider, billiard_rect3);
+				collided = white_ball.checkCollision(white_ball.mCollider, billiard_rect4);
+				collided = white_ball.checkCollision(white_ball.mCollider, billiard_rect5);
+				collided = white_ball.checkCollision(white_ball.mCollider, billiard_rect6);
+
+				if (collided) {
+					std::cout << "Kolizja!";
 				}
+
+				//white_ball.move(vec_t{ 20, 0 }, stick);
 				break;
 
 			}
@@ -323,10 +429,30 @@ int main() { // int argc, char **argv ) {
 
 		//draw
 		billiard_table.draw(renderer);
-		white_ball.draw(renderer, "data/ball0.bmp");
-		ball_one.draw(renderer, "data/ball1.bmp");
-		stick.draw(renderer);
 
+		SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+		SDL_RenderDrawRect(renderer.get(), &billiard_rect1);
+		SDL_RenderDrawRect(renderer.get(), &billiard_rect2);
+		SDL_RenderDrawRect(renderer.get(), &billiard_rect3);
+		SDL_RenderDrawRect(renderer.get(), &billiard_rect4);
+		SDL_RenderDrawRect(renderer.get(), &billiard_rect5);
+		SDL_RenderDrawRect(renderer.get(), &billiard_rect6);
+
+		//promien 15
+		white_ball.draw(renderer, "data/ball0.bmp");
+		SDL_SetRenderDrawColor(renderer.get(), 255, 0, 0, 255);
+		SDL_RenderDrawPoint(renderer.get(), white_ball.position[0], white_ball.position[1]);
+		ball_one.draw(renderer, "data/ball1.bmp");
+
+		switch (gameState) {
+		case aimBall:
+		case strenghStrike:
+		case ballInMove:
+			stick.draw(renderer);
+			SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, 255);
+			SDL_RenderDrawPoint(renderer.get(), stick.position[0], stick.position[1]);
+			break;
+		}
 		/*SDL_SetRenderDrawColor(renderer.get(), 255, 255, 255, 255);
 		SDL_RenderDrawLine(renderer.get(), white_ball.position[0], white_ball.position[1], NULL, NULL);*/
 
