@@ -1,5 +1,6 @@
 #include "../include/Stick.h"
 #include "../include/Drawable.h"
+#include "../include/Ball.h"
 
 Stick::Stick(const std::string texturepath) {
 	texture = Drawable::LoadTexture(texturepath);
@@ -36,6 +37,15 @@ Stick::Stick(const std::string texturepath) {
 
 void Stick::setWhiteBall_destRect(SDL_Rect whiteBall_destRect) {
 	this->whiteBall_destRect = whiteBall_destRect;
+}
+
+bool Stick::check_collision(SDL_Point collision_point, Circle circle) {
+	if (abs(collision_point.x - circle.x) <= circle.r &&
+		abs(collision_point.y - circle.y) <= circle.r) {
+		return true;
+	}
+	else
+		return false;
 }
 
 double Stick::Angle(int x1, int y1, int x2, int y2) {

@@ -26,8 +26,8 @@ void Game::Init(const char* title, int width, int height) {
 
 	//OBIEKTY INICJALIZACJA
 	table = new Table("../data/billiard_table.bmp");
-	whiteBall = new Ball("../data/ball0.bmp", 744, 279);
-	orangeBall = new Ball("../data/ball1.bmp", 200, 279);
+	whiteBall = new Ball("../data/ball0.bmp", Ball::Circle{ 744, 279, 33 });
+	orangeBall = new Ball("../data/ball1.bmp", Ball::Circle{ 200, 279, 33 });
 	stick = new Stick("../data/stick.bmp");
 }
 
