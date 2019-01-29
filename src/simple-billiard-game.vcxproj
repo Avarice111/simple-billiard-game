@@ -19,7 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="Drawable.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Stick.cpp" />
+    <ClCompile Include="Table.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Ball.h" />
+    <ClInclude Include="..\include\Drawable.h" />
+    <ClInclude Include="..\include\Game.h" />
+    <ClInclude Include="..\include\Stick.h" />
+    <ClInclude Include="..\include\Table.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
