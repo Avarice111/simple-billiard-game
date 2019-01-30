@@ -46,9 +46,12 @@ public:
 private:
 	double strengh;
 	int cnt = 0;
+	SDL_Point mouseLastPosion;
 	bool isRunning;
 	SDL_Window *window;
 	enum GameState gameState;
+	double angle;
+	SDL_Point stickLastPosition;
 };
 
 

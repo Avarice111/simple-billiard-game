@@ -27,14 +27,14 @@ bool Table::check_collision(SDL_Point collision_point, Circle circle) {
 
 bool Table::check_collision(SDL_Rect rect, Circle circle) {
 	int rightSide = rect.x + rect.w;
-	int leftSide = rect.x;
-	int topSide = rect.y;
-	int bottomSide = rect.x + rect.h;
+	int leftSide = rect.x; 
+	int topSide = rect.y; 
+	int bottomSide = rect.y + rect.h;
 
-	if ((rightSide - circle.x < circle.r ||
-		circle.x - leftSide < circle.r) &&
-		(bottomSide - circle.y < circle.r ||
-			circle.y - topSide < circle.r)) {
+	if (circle.x - rightSide < circle.r && 
+		leftSide - circle.x < circle.r && 
+		circle.y - bottomSide < circle.r && 
+			topSide - circle.y < circle.r) { 
 		return true;
 	}
 	else
@@ -43,7 +43,6 @@ bool Table::check_collision(SDL_Rect rect, Circle circle) {
 
 void Table::Render() {
 	SDL_RenderCopy(Game::renderer, texture, &srcRect, &destRect);
-	//std::cout << "Table: Render" << std::endl;
 }
 
 void Table::DebugCollidersRender() {
@@ -65,15 +64,15 @@ void Table::DebugCollidersRender() {
 
 	SDL_RenderDrawRect(Game::renderer, &billiard_rect1);
 
-	SDL_RenderDrawRect(Game::renderer, &billiard_rect2);
+	//SDL_RenderDrawRect(Game::renderer, &billiard_rect2);
 
-	SDL_RenderDrawRect(Game::renderer, &billiard_rect3);
+	//SDL_RenderDrawRect(Game::renderer, &billiard_rect3);
 
-	SDL_RenderDrawRect(Game::renderer, &billiard_rect4);
+	//SDL_RenderDrawRect(Game::renderer, &billiard_rect4);
 
-	SDL_RenderDrawRect(Game::renderer, &billiard_rect5);
+	//SDL_RenderDrawRect(Game::renderer, &billiard_rect5);
 
-	SDL_RenderDrawRect(Game::renderer, &billiard_rect6);
+	//SDL_RenderDrawRect(Game::renderer, &billiard_rect6);
 }
 
 SDL_Rect Table::get() {

@@ -16,7 +16,14 @@ double Physics::estimateAngle(SDL_Point point, Circle circle) {
 }
 
 double Physics::estimateAngle(double angle) {
-	return -angle;
+	double new_angle;
+	if (angle < 0) {
+		new_angle = 180 - abs(angle);
+	}
+	else {
+		new_angle = angle - 180;
+	}
+	return new_angle;
 }
 
 double Physics::estimateBounceAngle(SDL_Rect rect, Circle circle) {
@@ -46,14 +53,14 @@ double Physics::estimateStrengh(double strengh, Uint32 lastTime) {
 }
 
 double Physics::destTransform_x(int destRect_x, double velocity, int angle) {
-	if (angle > 90) {
+	if (angle >= 90) {
 		return destRect_x - velocity * (angle - 90) / 90;
 	}
-	if (angle >= 0) {
+	else if (angle >= 0) {
 		return destRect_x + velocity * (90 - angle) / 90;
 	}
 	else if (angle < -90) {
-		return destRect_x - velocity * (-angle - 90 ) / 90;
+		return destRect_x - velocity * abs(angle + 90)  / 90;
 	}
 	else {
 		return destRect_x + velocity * (90 + angle) / 90;
@@ -62,13 +69,13 @@ double Physics::destTransform_x(int destRect_x, double velocity, int angle) {
 
 double Physics::destTransform_y(int destRect_y, double velocity, int angle) {
 	if (angle > 90) {
-		return destRect_y - velocity * (angle - 90) / 90;
+		return destRect_y + velocity * (180 - angle) / 90;
 	}
-	if (angle >= 0) {
-		return destRect_y - velocity * angle / 90;
+	else if (angle >= 0) {
+		return destRect_y + velocity * angle / 90;
 	}
 	else if (angle < -90) {
-		return destRect_y + velocity * (-angle - 90) / 90;
+		return destRect_y - velocity * (180 - abs(angle)) / 90;
 	}
 	else {
 		return destRect_y + velocity * angle / 90;

@@ -10,7 +10,7 @@ Stick::Stick(const std::string texturepath) {
 	srcRect.x = 0;
 	srcRect.y = 0;
 
-	point = { -30, 0 };
+	point = { -50, 0 };
 	angle = 180;
 
 	strengh = 0;
@@ -62,35 +62,37 @@ double Stick::Angle(int x1, int y1, int x2, int y2) {
 	return atan2(y2 - y1, x2 - x1);
 }*/
 
-void Stick::Update(int mouse_x, int mouse_y) {
+void Stick::Update(int mouse_x, int mouse_y, Uint32 lastTime) {
 	angle = Angle(destRect.x, destRect.y, mouse_x, mouse_y);
 
-	destRect.x = whiteBall_destRect.x - point.x
-		+ whiteBall_destRect.w / 2 + 1;
-	if (angle > 90) {
-		destRect.x += destRect.h * (180 - angle) / 180;
-	}
-	else if (abs(angle) <= 90) {
-		destRect.x += destRect.h * angle / 180;
-	}
-	else if (angle <= -90) {
-		destRect.x -= destRect.h * (180 + angle) / 180;
-	}
-	destRect.y = whiteBall_destRect.y - point.y
-		+ whiteBall_destRect.h / 2 + 1
-		- destRect.h / 2
-		+ abs(destRect.h * angle / 180);
-}
+	if (gameState == aiming) {
 
-void Stick::Update(Uint32 lastTime) {
-	if (gameState == gainingStrengh) {
-		//angle = Angle(destRect.x, destRect.y, point.x, point.y);
+		destRect.x = whiteBall_destRect.x - point.x
+			+ whiteBall_destRect.w / 2 + 1;
+		if (angle > 90) {
+			destRect.x += destRect.h * (180 - angle) / 180;
+		}
+		else if (abs(angle) <= 90) {
+			destRect.x += destRect.h * angle / 180;
+		}
+		else if (angle <= -90) {
+			destRect.x -= destRect.h * (180 + angle) / 180;
+		}
+		destRect.y = whiteBall_destRect.y - point.y
+			+ whiteBall_destRect.h / 2 + 1
+			- destRect.h / 2
+			+ abs(destRect.h * angle / 180);
+	}
 
-		point.x -= 0.01 * lastTime / Game::DELAY_TIME;
-	}
-	if (gameState == shooting) {
-		point.x += 0.1 * lastTime / Game::DELAY_TIME;
-	}
+	/*if (gameState == gainingStrengh) {
+		point = SDL_Point{
+			point.x - (int)(-0.01 * lastTime / Game::DELAY_TIME),
+			0
+		};
+		destRect.x = whiteBall_destRect.x - point.x;
+		destRect.y = whiteBall_destRect.y - point.y;
+		std::cout << point.x << std::endl;
+	}*/
 }
 
 void Stick::RenderEx() {
@@ -108,4 +110,8 @@ SDL_Rect Stick::get() {
 
 int Stick::getStrengh() {
 	return strengh;
+}
+
+double Stick::getAngle() {
+	return angle;
 }

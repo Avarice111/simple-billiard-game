@@ -18,15 +18,15 @@ public:
 
 	Stick(const std::string texturepath);
 	void setWhiteBall_destRect(SDL_Rect whiteBall_destRect);
-	void setGameState(enum GameState gamesState);
+	void setGameState(GameState gamesState);
 	bool check_collision(SDL_Point collision_point, Circle circle);
-	void Update(int mouse_x, int mouse_y);
-	void Update(Uint32 lastTime);
+	void Update(int mouse_x, int mouse_y, Uint32 lastTime);
 	void RenderEx();
 	void Render();
 
 	SDL_Rect get();
 	int getStrengh();
+	double getAngle();
 
 private:
 	double Angle(int x1, int y1, int x2, int y2);

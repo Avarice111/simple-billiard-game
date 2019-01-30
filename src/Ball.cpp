@@ -29,12 +29,12 @@ bool Ball::check_collision(SDL_Rect rect, Circle circle) {
 	int rightSide = rect.x + rect.w;
 	int leftSide = rect.x;
 	int topSide = rect.y;
-	int bottomSide = rect.x + rect.h;
+	int bottomSide = rect.y + rect.h;
 
-	if ((rightSide - circle.x <= circle.r ||
-		circle.x - leftSide <= circle.r) &&
-		(bottomSide - circle.y <= circle.r ||
-		circle.y - topSide <= circle.r)) {
+	if (circle.x - rightSide < circle.r &&
+		leftSide - circle.x < circle.r &&
+		circle.y - bottomSide < circle.r &&
+		topSide - circle.y < circle.r) {
 		return true;
 	}
 	else
@@ -60,9 +60,9 @@ void Ball::setAngle(double angle) {
 
 void Ball::Update() {
 	destRect.x = Physics::destTransform_x(destRect.x, 
-		velocity, Physics::estimateAngle(angle));
+		velocity, angle);
 	destRect.y = Physics::destTransform_y(destRect.y, velocity, 
-		Physics::estimateAngle(angle));
+		angle);
 }
 
 void Ball::Render() {
