@@ -4,6 +4,7 @@ static Table* table;
 static Ball* whiteBall;
 static Ball* orangeBall;
 static Stick* stick;
+enum GameState* gameState;
 
 SDL_Renderer* Game::renderer = nullptr;
 
@@ -18,6 +19,9 @@ void Game::Init(const char* title, int width, int height) {
 			width, height, SDL_WINDOW_SHOWN);
 		renderer = SDL_CreateRenderer(window, -1, 
 			SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+		gameState = aiming;
+
 		isRunning = true;
 	}
 	else {
@@ -34,13 +38,19 @@ void Game::Init(const char* title, int width, int height) {
 void Game::HandleEvents() {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_MOUSEMOTION) {
+		if (event.type == SDL_MOUSEMOTION && gameState == aiming) {
 			//PRZEMIESZCZENIE SIE KIJA
 			stick->Update(event.button.x, event.button.y);
 		}
 		if (event.type == SDL_MOUSEBUTTONDOWN) {
-			if (event.button.button == SDL_BUTTON_LEFT) {
+			if (event.button.button == SDL_BUTTON_LEFT && gameState == aiming) {
 				//SILA KIJA I STRZAL
+				gameState = gainingStrengh;
+				stick->setGameState(Stick::gainingStrengh);
+			}
+			else if (event.button.button == SDL_BUTTON_LEFT && gameState == gainingStrengh) {
+				gameState = shooting;
+				stick->setGameState(Stick::shooting);
 			}
 		}
 	}
@@ -49,7 +59,28 @@ void Game::HandleEvents() {
 
 
 void Game::Update() {
+	Uint32 updateStart = SDL_GetTicks();
+
 	stick->setWhiteBall_destRect(whiteBall->get());
+
+	if (gameState == gainingStrengh) {
+		Physics::estimateStrengh(strengh, updateStart);
+		stick->Update(updateStart);
+	}
+	//collisions
+	if (gameState == shooting) {
+		stick->Update(updateStart);
+		
+		if (stick->check_collision(SDL_Point{ stick->get().x, stick->get().y },
+			Stick::Circle{ whiteBall->get().x, whiteBall->get().y, whiteBall->get().w })) {
+
+			whiteBall->setAngle(Physics::estimateAngle(SDL_Point{ stick->get().x, stick->get().y },
+				Physics::Circle{ whiteBall->get().x, whiteBall->get().y, whiteBall->get().w }));
+			whiteBall->setVelocity(Physics::estimateVelocity(Game::strengh, updateStart));
+		}
+	}
+
+	whiteBall->Update();
 }
 
 void Game::Render() {

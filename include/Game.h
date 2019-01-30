@@ -15,6 +15,8 @@
 #include <array>
 #include <math.h>
 
+#include "../include/Physics.h"
+
 #include "../include/Ball.h"
 #include "../include/Table.h"
 #include "../include/Stick.h"
@@ -22,6 +24,15 @@
 class Game {
 
 public:
+	static const int FPS = 60.0f;
+	static const int DELAY_TIME = 1000.0f / FPS;
+
+	enum GameState {
+		aiming,
+		gainingStrengh,
+		shooting
+	};
+
 	Game();
 	void Init(const char* title, int width, int height);
 	void HandleEvents();
@@ -33,10 +44,11 @@ public:
 	static SDL_Renderer *renderer;
 
 private:
-
+	double strengh;
 	int cnt = 0;
 	bool isRunning;
 	SDL_Window *window;
+	enum GameState gameState;
 };
 
 

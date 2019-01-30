@@ -13,6 +13,8 @@ Stick::Stick(const std::string texturepath) {
 	point = { -30, 0 };
 	angle = 180;
 
+	strengh = 0;
+
 	destRect.w = srcRect.w;
 	destRect.h = srcRect.h;
 	destRect.x = whiteBall_destRect.x - point.x
@@ -37,6 +39,10 @@ Stick::Stick(const std::string texturepath) {
 
 void Stick::setWhiteBall_destRect(SDL_Rect whiteBall_destRect) {
 	this->whiteBall_destRect = whiteBall_destRect;
+}
+
+void Stick::setGameState(GameState gameState) {
+	this->gameState = gameState;
 }
 
 bool Stick::check_collision(SDL_Point collision_point, Circle circle) {
@@ -76,6 +82,17 @@ void Stick::Update(int mouse_x, int mouse_y) {
 		+ abs(destRect.h * angle / 180);
 }
 
+void Stick::Update(Uint32 lastTime) {
+	if (gameState == gainingStrengh) {
+		//angle = Angle(destRect.x, destRect.y, point.x, point.y);
+
+		point.x -= 0.01 * lastTime / Game::DELAY_TIME;
+	}
+	if (gameState == shooting) {
+		point.x += 0.1 * lastTime / Game::DELAY_TIME;
+	}
+}
+
 void Stick::RenderEx() {
 	SDL_RenderCopyEx(Game::renderer, texture, &srcRect, &destRect, 
 		angle, &point, SDL_FLIP_NONE);
@@ -87,4 +104,8 @@ void Stick::Render() {
 
 SDL_Rect Stick::get() {
 	return destRect;
+}
+
+int Stick::getStrengh() {
+	return strengh;
 }

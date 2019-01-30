@@ -23,6 +23,7 @@
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Stick.cpp" />
     <ClCompile Include="Table.cpp" />
   </ItemGroup>
@@ -30,6 +31,7 @@
     <ClInclude Include="..\include\Ball.h" />
     <ClInclude Include="..\include\Drawable.h" />
     <ClInclude Include="..\include\Game.h" />
+    <ClInclude Include="..\include\Physics.h" />
     <ClInclude Include="..\include\Stick.h" />
     <ClInclude Include="..\include\Table.h" />
   </ItemGroup>

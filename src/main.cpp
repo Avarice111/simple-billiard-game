@@ -5,9 +5,6 @@
 Game *game = nullptr;
 
 int main(int argc, char *argv[]) {
-	const int FPS = 60.0f;
-	const int DELAY_TIME = 1000.0f / FPS;
-
 	Uint32 frameStart;
 	int frameTime;
 
@@ -23,13 +20,13 @@ int main(int argc, char *argv[]) {
 		game->Update();
 		game->Render();
 
-		frameTime = SDL_GetTicks() - frameStart;
+		frameTime = frameStart - SDL_GetTicks();
 
-		if (frameTime < DELAY_TIME)
+		if (frameTime < Game::DELAY_TIME)
 
 		{
 
-			SDL_Delay((int)(DELAY_TIME - frameTime));
+			SDL_Delay((int)(Game::DELAY_TIME - frameTime));
 
 		}
 	}

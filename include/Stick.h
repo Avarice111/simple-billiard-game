@@ -10,14 +10,23 @@ public:
 		int r;
 	};
 
+	enum GameState {
+		aiming,
+		gainingStrengh,
+		shooting
+	};
+
 	Stick(const std::string texturepath);
 	void setWhiteBall_destRect(SDL_Rect whiteBall_destRect);
+	void setGameState(enum GameState gamesState);
 	bool check_collision(SDL_Point collision_point, Circle circle);
 	void Update(int mouse_x, int mouse_y);
+	void Update(Uint32 lastTime);
 	void RenderEx();
 	void Render();
 
 	SDL_Rect get();
+	int getStrengh();
 
 private:
 	double Angle(int x1, int y1, int x2, int y2);
@@ -30,5 +39,11 @@ private:
 	SDL_Rect whiteBall_destRect;
 	SDL_Point point;
 	double angle;
+
+	double velocity;
+
+	int strengh;
+
+	enum GameState gameState;
 };
 
