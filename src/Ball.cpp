@@ -63,6 +63,8 @@ void Ball::Update() {
 		velocity, angle);
 	destRect.y = Physics::destTransform_y(destRect.y, velocity, 
 		angle);
+
+	//std::cout << angle << std::endl;
 }
 
 void Ball::Render() {

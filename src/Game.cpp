@@ -90,7 +90,36 @@ void Game::Update() {
 
 		if (table->check_collision(SDL_Rect{ 86,0,398,52 },
 			Table::Circle{ whiteBall->get().x, whiteBall->get().y, whiteBall->get().w / 2 })) {
-				std::cout << "Collision!" << std::endl;
+				std::cout << "Collision1!" << std::endl;
+				/*whiteBall->setAngle(Physics::estimateBounceAngle(table->get(),
+					Physics::Circle{ whiteBall->get().x, whiteBall->get().y, whiteBall->get().w }));*/
+		}
+
+		if (table->check_collision(SDL_Rect{ 538,0,398,52 },
+			Table::Circle{ whiteBall->get().x, whiteBall->get().y, whiteBall->get().w / 2 })) {
+			std::cout << "Collision2!" << std::endl;
+			/*whiteBall->setAngle(Physics::estimateBounceAngle(table->get(),
+				Physics::Circle{ whiteBall->get().x, whiteBall->get().y, whiteBall->get().w }));*/
+		}
+
+		if (table->check_collision(SDL_Rect{ 0,86,52,394 },
+			Table::Circle{ whiteBall->get().x, whiteBall->get().y, whiteBall->get().w / 2 })) {
+			std::cout << "Collision3!" << std::endl;
+		}
+
+		if (table->check_collision(SDL_Rect{ 972,86,1024,394 },
+			Table::Circle{ whiteBall->get().x, whiteBall->get().y, whiteBall->get().w / 2 })) {
+			std::cout << "Collision4!" << std::endl;
+		}
+
+		if (table->check_collision(SDL_Rect{ 86,519,398,52 },
+			Table::Circle{ whiteBall->get().x, whiteBall->get().y, whiteBall->get().w / 2 })) {
+			std::cout << "Collision5!" << std::endl;
+		}
+
+		if (table->check_collision(SDL_Rect{ 538,519,398,52 },
+			Table::Circle{ whiteBall->get().x, whiteBall->get().y, whiteBall->get().w / 2 })) {
+			std::cout << "Collision6!" << std::endl;
 		}
 	}
 	whiteBall->Update();

@@ -64,15 +64,15 @@ void Table::DebugCollidersRender() {
 
 	SDL_RenderDrawRect(Game::renderer, &billiard_rect1);
 
-	//SDL_RenderDrawRect(Game::renderer, &billiard_rect2);
+	SDL_RenderDrawRect(Game::renderer, &billiard_rect2);
 
-	//SDL_RenderDrawRect(Game::renderer, &billiard_rect3);
+	SDL_RenderDrawRect(Game::renderer, &billiard_rect3);
 
-	//SDL_RenderDrawRect(Game::renderer, &billiard_rect4);
+	SDL_RenderDrawRect(Game::renderer, &billiard_rect4);
 
-	//SDL_RenderDrawRect(Game::renderer, &billiard_rect5);
+	SDL_RenderDrawRect(Game::renderer, &billiard_rect5);
 
-	//SDL_RenderDrawRect(Game::renderer, &billiard_rect6);
+	SDL_RenderDrawRect(Game::renderer, &billiard_rect6);
 }
 
 SDL_Rect Table::get() {

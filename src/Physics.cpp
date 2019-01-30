@@ -32,9 +32,11 @@ double Physics::estimateBounceAngle(SDL_Rect rect, Circle circle) {
 
 	if (angle <= 0) {
 		new_angle = 180 - 2 * (180 + angle);
+		std::cout << angle << std::endl;
 	}
 	else {
 		new_angle = 180 - 2 * (180 - angle);
+		std::cout << angle << std::endl;
 	}
 
 	return new_angle;
